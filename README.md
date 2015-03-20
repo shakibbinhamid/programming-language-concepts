@@ -29,6 +29,8 @@ To use:
   .
   k
   
+All in new lines.
+  
 where L1, L2 are mathematical sets like {a , b, 1, 3} (elements are regarded as strings)
 and k is the maximum number of elements to come out as ouputs (if the output is a set)
 
