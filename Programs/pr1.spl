@@ -1,0 +1,13 @@
+begin
+	let $set; /* declare the output set */
+	let @str; /* declare the variable to add*/
+
+	/* for every value in input stream, concatenate it with "a" and add to output set */
+	
+	for @inp in $input0 do
+		@str = @inp^"a";
+		$set = $set add @str;
+	done
+
+	print $set;
+end

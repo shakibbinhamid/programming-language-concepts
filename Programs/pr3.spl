@@ -1,0 +1,20 @@
+begin
+	let $set_a; /* declare first output set */
+	let $set_b; /* declare second output set */
+
+	for @inp1 in $input0 do
+		$set_a = $set_a add @inp1;
+		$set_b = $set_b add @inp1;
+	done
+
+	for @inp2 in $input1 do
+		$set_a = $set_a add @inp2;
+	done
+
+	for @inp3 in $input2 do
+		$set_b = $set_b add @inp3;
+	done
+
+	print $set_a;
+	print $set_b;
+end

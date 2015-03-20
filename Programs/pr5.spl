@@ -1,0 +1,54 @@
+begin
+
+	let $set;
+
+	let @arg;
+
+	let #i1;
+	let #i2;
+	let #i3;
+
+	let #c1;
+	let #c2;
+	let #c3;
+
+	for @inp in $input0 do
+		@arg = @inp;
+		for #i1 < 3 do
+			@arg = @inp;
+			#c1 = #i1 % 3;
+			if #c1 == 0 then
+				@arg = @arg^"a";
+			else
+				if #c1 == 1 then
+					@arg = @arg^"b";
+				else
+					@arg = @arg^"c";
+				fi
+			fi
+			#i1 = #i1 + 1;
+			let @arg2 = @arg;
+			for #i2 < 3 do
+				#c2 = #i2 % 3;
+				if #c2 == 0 then
+					@arg = @arg^"a";
+				else
+					if #c2 == 1 then
+						@arg = @arg^"b";
+					else
+						@arg = @arg^"c";
+					fi
+				fi
+				#i2 = #i2 + 1;
+				$set = $set add @arg;
+				@arg = @arg2;
+			done
+			#i2 = 0;
+		done
+		#i1 = 0;
+	done
+
+	print $set;
+end	
+
+

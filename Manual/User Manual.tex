@@ -1,0 +1,411 @@
+
+\documentclass[11pt]{article}
+
+\usepackage{geometry}
+\usepackage{multicol}
+\usepackage{float} 
+\usepackage{wrapfig}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{xcolor}
+\usepackage{sectsty}
+\usepackage{pifont}
+\usepackage{varwidth}
+\usepackage{multicol}
+\usepackage{hyperref}
+
+\setlength{\columnsep}{1cm}
+\geometry{a4paper, legalpaper, margin=0.7in}
+\linespread{1}
+\graphicspath{{Pictures/}}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\setlength\parindent{0pt}
+
+\definecolor{darkmidnightblue}{rgb}{0.0, 0.2, 0.4}
+\definecolor{mediumtealblue}{rgb}{0.0, 0.33, 0.71}
+\definecolor{otterbrown}{rgb}{0.4, 0.26, 0.13}
+\sectionfont{\color{darkmidnightblue}}
+\subsectionfont{\color{mediumtealblue}}
+\subsubsectionfont{\color{otterbrown}}
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\center 
+\textsc{\LARGE University of Southampton}\\[1.5cm] % Name of your university/college
+\textsc{\Large COMP2212}\\[0.5cm] % Major heading such as course name
+\textsc{\large Programming Language Concepts}\\[0.5cm] % Minor heading such as course title
+
+\HRule \\[0.4cm]
+{ \huge The \emph{Pepperoni} Language User Manual}\\[0.4cm] % Title of your document
+\textsc{A Domain Specific Language to solve set theory related problems}
+\HRule \\[1.5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+Shakib-Bin \textsc{Hamid}\\
+Thomas \textsc{Aley}\\
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Lecturer:} \\
+Pawel \textsc{Sobocinski} 
+\end{flushright}
+\end{minipage}\\[4cm]
+
+{\large \today}\\[3cm]
+
+\vfill
+
+\end{titlepage}
+\tableofcontents
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	New Commands
+%----------------------------------------------------------------------------------------
+
+\newcommand*\block{\item[\ding{111}]}
+\newcommand{\ighlightedItem}[1]{\block \textbf{\textit{#1}}}
+
+\newenvironment{texto}{
+  \begin{center}
+  \begin{varwidth}[t]{\textwidth}
+  \raggedright
+}{
+  \end{varwidth}
+  \end{center}
+}
+
+\newcommand{\tab}[1]{\hskip 3em #1}
+\newcommand{\program}[1]{\begin{texto}{\textt #1}\end{texto}}
+
+\newcommand{\token}[1]{\textcolor{tokens}{#1}}
+\newcommand{\comment}[1]{\textcolor{comments}{#1}}
+\newcommand{\String}[1]{\textcolor{strings}{#1}}
+\newcommand{\Fatal}[1]{\textcolor{fatals}{#1}}
+
+\newcommand{\BEGIN}{\token {begin }}
+\newcommand{\END}{\token {end }}
+\newcommand{\ADD}{\token {add }}
+\newcommand{\REMOVE}{\token {remove }}
+\newcommand{\IF}{\token {if }}
+\newcommand{\ELSE}{\token {else }}
+\newcommand{\THEN}{\token {then }}
+\newcommand{\FI}{\token {fi }}
+\newcommand{\FOR}{\token {for }}
+\newcommand{\IN}{\token {in }}
+\newcommand{\DO}{\token {do }}
+\newcommand{\DONE}{\token {done }}
+\newcommand{\TRUE}{\token {true }}
+\newcommand{\FALSE}{\token {false }}
+\newcommand{\PRINT}{\token {print }}
+\newcommand{\LET}{\token {let }}
+\newcommand{\OC}{\token {\#OUTPUT\_COUNT }}
+\newcommand{\PLUS}{\token {+ }}
+\newcommand{\MINUS}{\token {- }}
+\newcommand{\DIVIDE}{\token {/ }}
+\newcommand{\MOD}{\token {\% }}
+\newcommand{\TIMES}{\token {* }}
+\newcommand{\CAT}{\token {\^{} }}
+\newcommand{\LT}{\token {$<$ }}
+\newcommand{\GT}{\token {$>$ }}
+\newcommand{\EQ}{\token {$==$ }}
+\newcommand{\NEQ}{\token {$!=$ }}
+\newcommand{\LEQ}{\token {$<=$ }}
+\newcommand{\GEQ}{\token {$>=$ }}
+\newcommand{\AND}{\token {$\&\&$ }}
+\newcommand{\OR}{\token {$||$ }}
+\newcommand{\NOT}{\token {$!$ }}
+\newcommand{\ASS}{\token {$=$ }}
+\newcommand{\INPUT}{\token {\$input0 }}
+
+\definecolor{tokens}{rgb}{0.6, 0.2, 0.8}
+\definecolor{comments}{rgb}{0.0, 0.56, 0.0}
+\definecolor{strings}{rgb}{0.0, 0.22, 0.66}
+\definecolor{fatals}{rgb}{1.0, 0.0, 0.16}
+
+%----------------------------------------------------------------------------------------
+%	Start of Report
+%----------------------------------------------------------------------------------------
+
+\section{Problem Domain}
+
+This is primarily a Domain Specific Programming Language made to solve set theory related problems e.g. union, concatenation, intersection, difference, kleene star etc. For example: $ L_1 = \left\{a, b \right\}, L_2 = \left\{b, c \right\} $ then $ L_1 \cup L_2 = \left\{a, b, c \right\} $ can be done in this language.\\\\ However, additional functionality also solves many problems in the Integer domain for example: generating fibonacci numbers etc.
+
+\section{Data Types and Manipulation}
+
+The languages are treated as mathematical sets which consist of finite strings built from any English alphabet and/or digits separated by comma. So, \texttt{ \{a, b, 123, "hello"\} } is a valid input to the programs.
+\\\\
+The supported primitive types in the language are \emph{String}, \emph{Integer} and \emph{Boolean}.
+
+\subsection{Primitive Variable Declaration}
+Every non-control structure such as variable declaration \emph{must} end with a semi-colon. So, a variable can be declared as \LET $<variable\_name>$; Variable name can be any combination of letters, digits and underscores. Below is a code snippet demonstrating variable declaration.
+
+\begin{texto}
+	\texttt{\comment { /* Comments can be placed in this form */ }\\
+			\LET \#x; \comment {/* \# indicates Integer type. Here \#x is auto initialised to 0 */} \\
+			\LET \#y \ASS 5; \comment {/* y is initialised to 5 */} \\
+			\LET @my\_string; \comment {/* @ indicates String type. Here @my\_string is initialised to "" */} \\
+			\LET @hello \ASS \String{"hello world"}; \comment {/* Strings must be surrounded by double quotes */} \\
+			\LET ?ToF; \comment{/* ? indicates Boolean type. Here ToF is initialised to false */} \\
+			\LET ?ocamlFun \ASS \TRUE; \comment {/* Here ocamlFun is initialised to true */} 
+	 }
+\end{texto}
+
+You must initialise the variable (if chosen to do so) correctly. For example: \LET \texttt{\#x = "";} will show \Fatal{Fatal error: exception Parsing.Parse\_error}.
+
+\subsection{Primitive Operations}
+
+Every operation must be in the form $<primitive> <operation> <primitive>;$ The original primitive is not mutated, so the value \emph{must} be assigned to a variable for reference or the result of the operations can be directly printed. 
+
+\subsubsection{Integer Operations}
+The language supports Integer Addition ( \PLUS), Subtraction ( \MINUS), Multiplication ( \TIMES), Division ( \DIVIDE), Modulo ( \MOD). They are all left associative with precedence in the order of $\MOD > \TIMES \DIVIDE > \PLUS \MINUS$ unless parenthesis are used to dictate order. Below are some code snippets.
+
+\begin{texto}
+	\texttt{\comment { /* Example Integer operations */ }\\
+		\LET \#x \ASS 3;
+		\LET \#y;
+		\LET \#z \ASS 4;\\
+        \#y \ASS \#y \PLUS 1; \comment{/* \#y is incremented by 1 */} \\
+        \#x \ASS \#x \PLUS \#y \TIMES \#z; \comment{/* \#x is now 7 because * has more precedence than + */} \\
+        \#y \ASS (\#x \PLUS \#y) \TIMES \#z; \comment{/* \#y is now 32 because parenthesis overrode the precedence */} \\
+	 }
+\end{texto}
+
+\subsubsection{String Operations}
+The language also supports String concatenation ( \CAT). Below are some code snippets.
+
+\begin{texto}
+	\texttt{\comment { /* Example String operations */ }\\
+		\LET @s \ASS \String {"hello"};
+		\LET @t \ASS \String {"world"};	\\
+		@s \ASS @s \CAT \String{" "} \CAT @t; \comment {/* @s is now "hello world" */} 		
+	 }
+\end{texto}
+
+\subsubsection{Boolean Operations}
+The language supports Boolean operations: Less Than ( \LT), Greater Than ( \GT), Less Than or Equal ( \LEQ), Greater Than or Equal ( \GEQ), Equal ( \EQ), Not Equal ( \NEQ), AND ( \AND), OR ( \OR), NOT ( \NOT). \AND, \OR are right associative whereas the rest are left associative except \NOT which is non-associative. The precedence is in the order of  \NOT $>$ ( \LT, \GT, \LEQ, \GEQ) $>$ ( \EQ, \NEQ) $>$ \AND $>$ \OR .
+\newpage
+Below are some code snippets.
+
+\begin{texto}
+	\texttt{\comment { /* Example Boolean operations */ }\\
+		\LET @s \ASS \String {"hello"};
+		\LET ?b \ASS \TRUE;
+		\LET \#x \ASS 5;	\\	
+		@s \EQ \String{"hello"} \OR ?b \AND \#x \EQ 4; \comment{/* String \& Integer equality. Returns true */}\\		
+		(@s \EQ \String{"hello"} \OR ?b) \AND \#x \EQ 4;	\comment{/* Parenthesis overrides. Returns false */}
+	 }
+\end{texto}
+
+The language has the facility to print to the standard out for all primitive variables and actions as well as for the Set data structure that will be introduced shortly. The \PRINT statement always prints on a new line. Below are some code snippets.
+
+\begin{texto}
+	\texttt{\comment { /* Example print operations */ }\\
+		\LET @str \ASS \String {"Hello"};
+		\LET \#x \ASS 10;
+		\LET ?lightsOn = \TRUE; \\
+		\PRINT @str \CAT \String {" world"}; \comment {/* Prints Hello world */} \\
+		\PRINT 5 \PLUS \#x \MINUS 3; \comment {/* Prints 12 */} \\
+		\PRINT ?lightsOn \EQ \TRUE; \comment {/* Prints true */} 
+	 }
+\end{texto}
+
+Performing a primitive operation on an undeclared variable will result in an error similar to \Fatal {Fatal error: exception Failure ("Variable \#i Not Declared as an int type. Hint: Maybe try - let \#i = 0;")}.
+
+\subsection{Set Data Structure}
+
+The language supports set data structure of type String with operations to \ADD and \REMOVE elements. Input to the programs are read as sets from a file and stored as "input" followed by the line number (zero-based). For example: \INPUT refers to the first input set.  When printed, a set will appear like a mathematical set, with elements sorted lexicographically. Below is a code snippet. 
+
+\begin{texto}
+	\texttt{\comment { /* Set operations */ }\\
+		\LET @str \ASS \String {"b"}; 
+		\LET \$aSet; \comment {/* \$ Indicates a set. It must not be initialised */} \\
+		\$aSet \ASS \$aSet \ADD \String{"a1"}; \comment {/* Set operation work for string variables and primitives */}\\
+		\$aSet \ASS \$aSet \ADD @str; \PRINT \$aSet; \comment {/* Prints \{ a1, b \} */}\\
+		\$aSet \ASS \$aSet \REMOVE \String{"a1"}; \PRINT \$aSet; \comment {/* Prints \{ b \} */}
+	 }
+\end{texto}
+
+If a set operation is performed before the set has been declared, for example \$aSet \ADD ""; it will show \Fatal {Fatal error: exception Failure ("Set \$aSet Not Found. Hint: Maybe try - let \$aSet;")} or when trying to print a set that is not declared it will show \Fatal {Fatal error: exception Failure ("Set Not Found. Hint: Maybe didn't declare it?")}
+
+\section{Program Structure}
+
+Every program must start with \BEGIN and finish with \END. Every program must have an input file directed to it. Below is the canonical example of a program in this language, in a file called \texttt{pr1.spl}
+
+\begin{texto}
+	\texttt{\comment { /* Your first program */ }\\
+		\BEGIN \\
+		\tab	 \PRINT \String {"Hello World"}; \\
+		\END
+	 }
+\end{texto}
+
+To run the program type \texttt{./mysplinterpreter pr1.spl < input}
+
+\section{Control Structures}
+
+The language supports conditional and loop statements to control program flow. These in turn can be nested.
+
+\subsection{Conditionals}
+
+Both short and complete \IF statements are supported. The structure is \IF $<condition>$ \THEN $<statement>$ \FI or \IF $<condition>$ \THEN $<statement>$ \ELSE $<statement>$ \FI. Below are some code snippets.
+
+\begin{texto}
+	\texttt{\comment { /* Demonstration of conditionals */ }\\
+		\LET ?doMe \ASS \TRUE; \LET \#x \ASS 12; \\
+		\IF ?doMe \THEN \PRINT \String{"I am getting done"}; \FI \\ \vspace{0.25cm}
+	    \IF \#x \LT 0 \THEN \\
+		\tab \PRINT \String {"It will never happen"}; \\
+		\ELSE \\
+		\tab \IF !?doMe \EQ \FALSE \THEN \\
+		\tab \tab \PRINT \String {"Nested if triggered"}; \\
+		\tab \FI \\
+		\FI
+	 }
+\end{texto}
+
+\subsection{Loops}
+
+Both while loops and enhanced for loops are supported. The structure is \FOR $<condition>$ \DO $<statement>$ \DONE for while loops and \FOR $<string\_variable>$ \IN $<set>$ \DO $<statement>$ \DONE for enhanced loops. The enhanced loops are able to iterate over input sets and programmer declared sets alike. Below are some code snippets.
+
+\begin{texto}
+	\texttt{\comment { /* Demonstration of conditionals */ }\\
+		\LET \#i \ASS 5; \LET \$mySet; \LET \#count; \\
+		\$mySet \ASS \$mySet \ADD \String {"a"}; \\ \vspace{0.25cm}
+		\FOR \#i \GT 0 \DO \comment {/* \#i must have been declared before */} \\
+		\tab \PRINT \#i; \comment {/* Prints the numbers 5 to 1 */} \\ 
+		\tab  \#i \ASS \#i \MINUS 1; \comment {/* Remember to decrement \#i to prevent infinite loop */} \\
+		\DONE 
+		\\ \vspace{0.25 cm}
+		\FOR @element \IN \$mySet \DO \comment {/* @element must not have been declared previously */} \\
+		\tab \#count \ASS \#count \PLUS 1; \\
+		\DONE \\
+		\PRINT \String {"Number of elements: "}; \PRINT \#count; 
+	 }
+\end{texto}
+
+In the event of using a declared variable in an enhanced loop condition it will show an error similar to \Fatal {Fatal error: exception Failure ("Variable @element used already! Hint: Try a variable that is not already declared by a let declaration.")}. \\ 
+Also, if the referred input set does not exist it will show an error similar to \Fatal {Fatal error: exception Failure ("Input set \$input99 Not Found. Hint: \$input0 refers to the 1st language in input file and so on.")}.
+
+\section{Example Programs}
+
+\begin{multicols}{2}
+
+Contains 'n'
+
+\begin{texto}
+    \texttt{\comment { /* First n Fibonacci Numbers */ }\\
+		\BEGIN \\
+		\tab \LET \#a \ASS 0; \\
+		\tab \LET \#b \ASS 1; \\
+		\tab \LET \#i; \LET \#tmp; \\ \vspace{0.25cm}
+		\tab \FOR \#i \LT \OC \DO \\
+		\tab \tab \PRINT \#a; \\
+		\tab \tab \#tmp \ASS \#a; \\
+		\tab \tab \#a \ASS \#b; \\
+		\tab \tab \#b \ASS \#tmp \PLUS \#b; \\
+		\tab \tab \#i \ASS \#i \PLUS 1; \\
+		\tab \DONE \\
+		\END
+	 }
+\end{texto}
+
+Prints 0 1 1 2 ... 34 with each number on a new line.
+
+
+\columnbreak
+
+Input file has 6 on line one
+\begin{texto}
+    \texttt{\comment { /* Kleene Star */ }\\
+		\BEGIN \\
+		\tab \LET \$set; \\
+		\tab \LET @arg; \\ 
+		\tab \LET \#count; \\ \vspace{0.25cm}
+		\tab \FOR \#count \LT \OC \DO \\
+		\tab \tab \$set \ASS \$set \ADD @arg; \\
+		\tab \tab @arg \ASS @arg \CAT \String {"a"}; \\
+		\tab \tab \#count \ASS \#count \PLUS 1; \\
+		\tab \DONE \\
+		\tab \PRINT \$set; \\
+		\END
+	 }
+\end{texto}
+
+Prints \{ :, a, aa, aaa, aaaa, aaaaa \}
+
+\end{multicols}
+\begin{center}
+\noindent\rule{8cm}{0.4pt}
+\end{center}
+
+\begin{multicols}{2}
+
+Input file has \{a, b\} on line one, \{b, c\} on line two and 6 on line three 
+\begin{texto}
+    \texttt{\comment { /* Difference of Two Sets */ }\\
+    \BEGIN\\
+    	\tab \FOR @inp \IN \textcolor{tokens}{\$input1} \DO\\
+	\tab \tab \INPUT \ASS \INPUT \REMOVE @inp;\\
+    	\tab \DONE\\
+    	\tab \PRINT \INPUT;\\
+    \END
+	 }
+\end{texto}
+
+Prints \{ a, c \}
+
+\columnbreak
+
+Input file contains n. Prints 3 5 7 ... on new line
+\begin{texto}
+    \texttt{\comment { /* Prime Numbers from 3 to n*/ }\\
+    \BEGIN\\
+    	\tab \LET ?divisible; \LET \#i \ASS 3; \LET \#j \ASS 2;\\
+    	\tab \FOR \#i \LT \OC \DO\\
+    	\tab \tab ?divisible \ASS \FALSE;\\
+    	\tab \tab \FOR \#j \LT \#i \DO\\
+    	\tab \tab \tab \IF \#i \MOD \#j \EQ 0 \THEN \\	
+    	\tab \tab \tab \tab ?divisible \ASS \TRUE;\\
+    	\tab \tab \tab \FI\\
+    	\tab \tab \tab \#j \ASS \#j \PLUS 1;\\
+    	\tab \tab \DONE\\
+    	\tab \#j \ASS 2;\\
+    	\tab \IF \textcolor{tokens}{$!$}?divisible \THEN\\
+    	\tab \tab \PRINT \#i;\\
+    	\tab \FI\\
+    	\tab \#i \ASS \#i \PLUS 1;\\
+    	\tab \DONE\\
+    \END
+	 }
+\end{texto}
+
+\end{multicols}
+
+\end{document}
+
+
+
+
+
+
